@@ -11,7 +11,6 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/tarefas")
 public class TaskController {
     private final TaskService taskService;
 
@@ -19,19 +18,25 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping
+    @GetMapping("/tarefas")
     public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
 
-    @PostMapping
+    @GetMapping("/tarefas/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id){
+        Task task = taskService.findTaskById(id);
+        return ResponseEntity.ok(task);
+    }
+
+    @PostMapping("/tarefa")
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
         Task createdTask = taskService.createTask(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("tarefas/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
         Task updatedTask = taskService.updateTask(id, task);
         if (updatedTask != null) {
@@ -41,7 +46,7 @@ public class TaskController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("tarefas/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         boolean deleted = taskService.deleteTask(id);
         if (deleted) {
